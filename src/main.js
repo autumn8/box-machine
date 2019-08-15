@@ -114,7 +114,7 @@ const engine = Engine.create();
     World.add(engine.world, box);
   },200);
   
-
+  engine.world.gravity.y = 1;
   // add all of the bodies to the world
   World.add(engine.world, [boxA, boxB, ground, rightUpperArm, rightForeArm]);
 
@@ -146,19 +146,19 @@ const engine = Engine.create();
       const yDiff =  shoulder.position.y - elbow.position.y;      
       const limbLength = Math.hypot(xDiff, yDiff);
       const limbScale = limbLength / prevRightUpperArmLength;
-      prevRightUpperArmLength = limbLength;
-      console.log(limbScale);
+      prevRightUpperArmLength = limbLength;           
       const rotation = Math.atan2( yDiff, xDiff);
       const centerX = shoulder.position.x - (xDiff * 0.5);
       const centerY = shoulder.position.y - (yDiff * 0.5);
-      //console.log(arm);
-      Body.setPosition(rightUpperArm, { x: centerX, y: centerY });
+      
+      Body.setVelocity(rightUpperArm, { x: (centerX - rightUpperArm.position.x) * 0.5 , y: (centerY - rightUpperArm.position.y) * 0.5 });
+      Body.setPosition(rightUpperArm, { x: centerX, y: centerY });      
+      const prevRotation = rightUpperArm.angle;      
       //sneaky angle reset to prevent skewing of object vertices;
       Body.setAngle(rightUpperArm, 0)
       Body.scale(rightUpperArm, limbScale, 1);
-      Body.setAngle(rightUpperArm, rotation)
-      
-      //console.log({limbLength, rotation, centerX, centerY, limbScaleX});
+      Body.setAngularVelocity(rightUpperArm, (prevRotation - rotation) * 0.5);
+      Body.setAngle(rightUpperArm, rotation);
     }
   }
 
@@ -173,17 +173,17 @@ const engine = Engine.create();
       const limbLength = Math.hypot(xDiff, yDiff);
       const limbScale = limbLength / prevRightForeArmLength;
       prevRightForeArmLength = limbLength;
-      console.log(limbScale);
+      //console.log(limbScale);
       const rotation = Math.atan2( yDiff, xDiff);
       const centerX = shoulder.position.x - (xDiff * 0.5);
       const centerY = shoulder.position.y - (yDiff * 0.5);
-      //console.log(arm);
-      Body.setPosition(rightForeArm, { x: centerX, y: centerY });
+      Body.setVelocity(rightForeArm, { x: centerX - rightForeArm.position.x, y: centerY - rightForeArm.position.y });
+      Body.setPosition(rightForeArm, { x: centerX, y: centerY });      
+      const prevRotation = rightForeArm.angle;      
       //sneaky angle reset to prevent skewing of object vertices;
       Body.setAngle(rightForeArm, 0)
       Body.scale(rightForeArm, limbScale, 1);
-      Body.setAngle(rightForeArm, rotation)
-      
-      //console.log({limbLength, rotation, centerX, centerY, limbScaleX});
+      Body.setAngularVelocity(rightForeArm, prevRotation - rotation);
+      Body.setAngle(rightForeArm, rotation);
     }
   }
