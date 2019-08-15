@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <video ref='video' id='video'></video>
-    <canvas ref='matter-canvas'></canvas>    
+    <video ref='video' id='video' ></video>
+    <canvas id='poses-canvas' ref='poses-canvas'></canvas>  
+    <canvas id='matter-canvas' ref='matter-canvas'></canvas>    
   </div>
 </template>
 
